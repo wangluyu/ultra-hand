@@ -21,9 +21,13 @@ func Start() func() error {
 			fmt.Printf("grpc: net.Listen(tcp, %s) faield, err:%v\n", *grpcAddr, err)
 			return err
 		}
-		defer grpcListener.Close()
 		s := grpc.NewServer()
-		pb.RegisterRpcDemoServer(s, grpcdemo.NewGRPCServer(svc))
-		return s.Serve(grpcListener)
+		pb.RegisterRpcDemoServer(s, svc)
+		err = s.Serve(grpcListener)
+		if err != nil {
+			fmt.Printf("failed to grpc server: %v", err)
+			return err
+		}
+		return nil
 	}
 }

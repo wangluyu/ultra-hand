@@ -14,8 +14,8 @@
 │       └── main.go           # service 启动入口文件
 ├── service                   # service 目录
 │    └── ${SERVICE_NAME}
-│       ├── endpoint.go       # 端点层，必须。定义请求 / 响应数据结构
-│       ├── transport.go      # 传输层，必须。解析用户请求 / 响应。定义路由，传输域绑定到具体的传输协议，如 HTTP 或 gRPC。
+│       ├── transport.go      # 传输层，必须。定义请求 / 响应数据结构, 解析用户请求 / 响应。定义路由，传输域绑定到具体的传输协议，如 HTTP 或 gRPC。
+│       ├── endpoint.go       # 端点层，必须。
 │       └── service.go        # 服务层，必须。串联业务逻辑。负责调用 logic 层。
 ├── entity                    # 贯穿整个 server 的通用的数据结构实体定义层，比如数据结构，错误码或者其他各种常量定义
 ├── logic                     # 业务封装层，当前 server 的业务复杂逻辑。

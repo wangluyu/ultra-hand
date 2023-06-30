@@ -2,17 +2,20 @@ package grpcdemo
 
 import (
 	"context"
+	"ultra-hand/service/grpcdemo/pb"
 )
 
 type Service interface {
-	Reply(ctx context.Context, name string) (reply string, err error)
+	pb.RpcDemoServer
 }
 
 type service struct {
+	pb.UnimplementedRpcDemoServer
 }
 
-func (s service) Reply(_ context.Context, name string) (reply string, err error) {
-	return "Hello " + name, nil
+func (s service) Reply(_ context.Context, req *pb.ReplyRequest) (resp *pb.ReplyResponse, err error) {
+	name := req.Name
+	return &pb.ReplyResponse{Reply: "Hello " + name}, nil
 }
 
 func NewService() Service {
