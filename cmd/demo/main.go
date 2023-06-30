@@ -30,14 +30,24 @@ func Start() func() error {
 			fmt.Printf("connect rpc %s failed, err: %v", *rpcDemoAddr, err)
 			return err
 		}
-		defer rpcConn.Close()
+		defer func(rpcConn *grpc.ClientConn) {
+			err := rpcConn.Close()
+			if err != nil {
+				return
+			}
+		}(rpcConn)
 
 		httpListener, err := net.Listen("tcp", *httpAddr)
 		if err != nil {
 			fmt.Printf("http: net.Listen(tcp, %s) failed, err:%v\n", *httpAddr, err)
 			return err
 		}
-		defer httpListener.Close()
+		defer func(httpListener net.Listener) {
+			err := httpListener.Close()
+			if err != nil {
+				return
+			}
+		}(httpListener)
 		httpHandler := demo.NewHTTPServer(svc, logger, rpcConn)
 		return http.Serve(httpListener, httpHandler)
 	}

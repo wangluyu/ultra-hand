@@ -9,8 +9,16 @@ import (
 func loggingMiddleware(logger log.Logger) endpoint.Middleware {
 	return func(next endpoint.Endpoint) endpoint.Endpoint {
 		return func(ctx context.Context, request interface{}) (interface{}, error) {
-			logger.Log("msg", "calling endpoint")
-			defer logger.Log("msg", "called endpoint")
+			err := logger.Log("msg", "calling endpoint")
+			if err != nil {
+				return nil, err
+			}
+			defer func(logger log.Logger, keyVals ...interface{}) {
+				err := logger.Log(keyVals)
+				if err != nil {
+					return
+				}
+			}(logger, "msg", "called endpoint")
 			return next(ctx, request)
 		}
 	}

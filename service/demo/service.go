@@ -35,12 +35,15 @@ type logMiddleware struct {
 
 func (mw logMiddleware) Call(ctx context.Context, req CallRequest, rpcReplyEndpoint endpoint.Endpoint) (reply string, err error) {
 	defer func(begin time.Time) {
-		mw.logger.Log(
+		err := mw.logger.Log(
 			"name", req.Name,
 			"output", reply,
 			"err", err,
 			"took", time.Since(begin),
 		)
+		if err != nil {
+			return
+		}
 	}(time.Now())
 	reply, err = mw.next.Call(ctx, req, rpcReplyEndpoint)
 	return
