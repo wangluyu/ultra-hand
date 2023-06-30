@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package="service/grpcdemo/pb";
+
+service RpcDemo {
+  rpc Reply(ReplyRequest) returns (ReplyResponse){}
+}
+
+message ReplyRequest {
+  string name = 1;
+}
+
+message ReplyResponse {
+  string reply = 1;
+}
