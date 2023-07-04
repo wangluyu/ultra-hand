@@ -64,6 +64,19 @@
   protoc --go_out=. --go-grpc_out=. manifest/protobuf/${文件名}.proto 
   ```
 
+## TODO
+1. 日志组件
+2. 配置解析
+3. 注入依赖
+4. 命令创建微服务：创建文件夹、文件
+5. redis
+6. 本地缓存
+7. mysql
+8. http
+9. grpc
+10. 服务注册 服务发现
+11. 压测
+12. 定时任务
 
 ## 库
 1. [gRPC-Go](https://github.com/grpc/grpc-go) golang RPC库
@@ -76,15 +89,14 @@
 8. [sentinel-golang](https://github.com/alibaba/sentinel-golang) 流控 [中文文档](https://sentinelguard.io/zh-cn/docs/golang/basic-api-usage.html)
 9. [fasthttp](https://github.com/valyala/fasthttp) http库
 10. [chaosmonkey](https://github.com/Netflix/chaosmonkey) 环境故障模拟工具
-11. [openrtb](https://github.com/prebid/openrtb) openrtb 协议
-12. [useragent](https://github.com/mssola/useragent) 解析 User Agent
-13. [hey](https://github.com/rakyll/hey) 压测工具
-14. [vegeta](https://github.com/tsenart/vegeta) 另一个压测工具
-15. [go-redis](https://github.com/redis/go-redis) Redis 客户端
-16. [clickhouse-go](https://github.com/ClickHouse/clickhouse-go) ClickHouse 客户端
-17. [etcd](https://github.com/etcd-io/etcd) 分布式 K/V 存储
-18. [bigcache](https://github.com/allegro/bigcache) 本地缓存 (可以再多看几个对比)
-19. [uuid](https://github.com/google/uuid) uuid
-20. [jaeger](https://github.com/jaegertracing/jaeger) 分布式追踪系统
-21. [gocron](https://github.com/jasonlvhit/gocron) 定时任务
-22. [sonic](https://github.com/bytedance/sonic) 极快的 JSON 序列化 / 反序列化
+11. [useragent](https://github.com/mssola/useragent) 解析 User Agent
+12. [hey](https://github.com/rakyll/hey) 压测工具
+13. [vegeta](https://github.com/tsenart/vegeta) 另一个压测工具
+14. [go-redis](https://github.com/redis/go-redis) Redis 客户端
+15. [clickhouse-go](https://github.com/ClickHouse/clickhouse-go) ClickHouse 客户端
+16. [etcd](https://github.com/etcd-io/etcd) 分布式 K/V 存储
+17. [bigcache](https://github.com/allegro/bigcache) 本地缓存 (可以再多看几个对比)
+18. [uuid](https://github.com/google/uuid) uuid
+19. [jaeger](https://github.com/jaegertracing/jaeger) 分布式追踪系统
+20. [gocron](https://github.com/jasonlvhit/gocron) 定时任务
+21. [sonic](https://github.com/bytedance/sonic) 极快的 JSON 序列化 / 反序列化
