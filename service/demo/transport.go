@@ -3,11 +3,11 @@ package demo
 import (
 	"context"
 	"encoding/json"
-	"github.com/go-kit/kit/log"
 	httptransport "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
 	"net/http"
+	"ultra-hand/pkg/log"
 	"ultra-hand/service/grpcdemo/pb"
 )
 
@@ -31,7 +31,7 @@ func encodeCallResponse(_ context.Context, w http.ResponseWriter, response inter
 
 func NewHTTPServer(svc Service, logger log.Logger, rpcConn *grpc.ClientConn) http.Handler {
 	call := makeCallEndpoint(svc, rpcConn)
-	call = loggingMiddleware(log.With(logger, "method", "call"))(call)
+	call = loggingMiddleware(logger.With("method", "call"))(call)
 	callHandler := httptransport.NewServer(
 		call,
 		decodeCallRequest,
