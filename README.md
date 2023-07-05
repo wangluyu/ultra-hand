@@ -9,11 +9,11 @@
 ## 目录结构
 ```tree
 .
-├── cmd                       # 入口指令，用于启动微服务，每个微服务（service）一个文件夹
-│   └── ${SERVICE_NAME}
-│       └── main.go           # service 启动入口文件
-├── service                   # service 目录
-│    └── ${SERVICE_NAME}
+├── cmd                       # 入口指令，用于启动微服务，每个微服务（app）一个文件夹
+│   └── ${APP_NAME}
+│       └── main.go           # Application 启动入口文件
+├── app                   # Application 目录
+│    └── ${APP_NAME}
 │       ├── transport.go      # 传输层，必须。定义请求 / 响应数据结构, 解析用户请求 / 响应。定义路由，传输域绑定到具体的传输协议，如 HTTP 或 gRPC。
 │       ├── endpoint.go       # 端点层，必须。
 │       └── service.go        # 服务层，必须。串联业务逻辑。负责调用 logic 层。
@@ -34,10 +34,10 @@
 └── README.md
 ```
 ### 各层概念介绍
-一个 server 包含多个 service，每个 service 都可以单独启动。
+一个 Server 包含多个 Application，每个 Application 都可以单独启动。
 1. cmd
    cmd 层负责引导程序启动，显著的工作是初始化逻辑、启动server监听、阻塞运行程序直至server退出。
-2. service
+2. app
 3. entity
 4. logic
 5. pkg

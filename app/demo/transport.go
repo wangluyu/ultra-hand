@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
 	"net/http"
-	"ultra-hand/service/grpcdemo/pb"
+	"ultra-hand/app/grpcdemo/pb"
 )
 
 // 网络传输相关的，包括协议（HTTP、gRPC、thrift...）等

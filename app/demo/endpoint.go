@@ -5,7 +5,7 @@ import (
 	"github.com/go-kit/kit/endpoint"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"google.golang.org/grpc"
-	"ultra-hand/service/grpcdemo/pb"
+	"ultra-hand/app/grpcdemo/pb"
 )
 
 // 一个 endpoint 表示对外提供的一个方法

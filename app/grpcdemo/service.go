@@ -2,7 +2,7 @@ package grpcdemo
 
 import (
 	"context"
-	"ultra-hand/service/grpcdemo/pb"
+	"ultra-hand/app/grpcdemo/pb"
 )
 
 type Service interface {

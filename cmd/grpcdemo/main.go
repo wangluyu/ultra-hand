@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"google.golang.org/grpc"
 	"net"
-	"ultra-hand/service/grpcdemo"
-	"ultra-hand/service/grpcdemo/pb"
+	"ultra-hand/app/grpcdemo"
+	"ultra-hand/app/grpcdemo/pb"
 )
 
 var (

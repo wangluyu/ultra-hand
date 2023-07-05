@@ -9,7 +9,7 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"ultra-hand/service/demo"
+	"ultra-hand/app/demo"
 )
 
 var (
