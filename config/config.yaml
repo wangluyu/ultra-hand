@@ -1,3 +1,11 @@
 log:
   loggerName: Default
-  logPath: D:\\开发\\ultra-hand\\tmp\\app.log
+  logPath: D:\\开发\\ultra-hand\\tmp\\demo.log
+  errLogPath: D:\\开发\\ultra-hand\\tmp\\err.log
+  levelEnabler: debug
+  stdout: true
+  json: false
+  maxSize: 10
+  maxBackups: 3
+  maxAge: 1
+  compress: true

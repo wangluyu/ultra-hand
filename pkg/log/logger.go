@@ -5,7 +5,7 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"io"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"os"
 )
 
@@ -19,8 +19,16 @@ type Logger struct {
 }
 
 type Option struct {
-	LoggerName string
-	LogPath    string
+	LoggerName   string
+	LogPath      string
+	ErrLogPath   string
+	LevelEnabler string
+	Stdout       bool
+	Json         bool
+	MaxSize      int
+	MaxBackups   int
+	MaxAge       int
+	Compress     bool
 }
 
 func NewLoggerOption(v *viper.Viper) (*Option, error) {
@@ -33,31 +41,76 @@ func NewLoggerOption(v *viper.Viper) (*Option, error) {
 }
 
 func NewZapLogger(o *Option) (*zap.SugaredLogger, error) {
-	core := zapcore.NewCore(
-		getEncoder(),
-		getLogWriter(o.LogPath),
-		zapcore.DebugLevel,
-	)
-	logger := zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1))
+	cores := make([]zapcore.Core, 0, 3)
+	encoder := getEncoder(o.Json)
+	levelEnabler, err := getLevelEnabler(o.LevelEnabler)
+	if err != nil {
+		return nil, err
+	}
+	cores = append(cores, zapcore.NewCore(
+		encoder,
+		getLogWriter(o.LogPath, o),
+		levelEnabler,
+	))
+	if "" != o.ErrLogPath {
+		cores = append(cores, zapcore.NewCore(
+			encoder,
+			getLogWriter(o.ErrLogPath, o),
+			zapcore.ErrorLevel,
+		))
+	}
+	if o.Stdout {
+		cores = append(cores, zapcore.NewCore(
+			getEncoder(false),
+			zapcore.Lock(os.Stdout),
+			levelEnabler,
+		))
+	}
+	coreTee := zapcore.NewTee(cores...)
+	logger := zap.New(coreTee, zap.AddCaller(), zap.AddCallerSkip(1))
 	defer logger.Sync() // flushes buffer, if any
 	sugarLogger := logger.Sugar()
 	return sugarLogger, nil
 }
 
-func getEncoder() zapcore.Encoder {
+func getLevelEnabler(level string) (zap.LevelEnablerFunc, error) {
+	var levelEnabler zap.LevelEnablerFunc
+	parseLevel, err := zapcore.ParseLevel(level)
+	if err != nil {
+		return nil, err
+	}
+	switch level {
+	case "debug":
+		levelEnabler = zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+			return lvl >= zapcore.DebugLevel
+		})
+	default:
+		levelEnabler = zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+			return lvl <= parseLevel && lvl != zapcore.DebugLevel
+		})
+	}
+	return levelEnabler, nil
+}
+
+func getEncoder(isJson bool) zapcore.Encoder {
 	ec := zap.NewProductionEncoderConfig()
 	ec.EncodeTime = zapcore.ISO8601TimeEncoder
 	ec.EncodeLevel = zapcore.CapitalLevelEncoder
-	return zapcore.NewConsoleEncoder(ec)
+	if isJson {
+		return zapcore.NewJSONEncoder(ec)
+	} else {
+		return zapcore.NewConsoleEncoder(ec)
+	}
 }
 
-func getLogWriter(lp string) zapcore.WriteSyncer {
-	file, err := os.Create(lp)
-	if err != nil {
-		return nil
-	}
-	ws := io.MultiWriter(file, os.Stdout)
-	return zapcore.AddSync(ws)
+func getLogWriter(lp string, o *Option) zapcore.WriteSyncer {
+	return zapcore.AddSync(&lumberjack.Logger{
+		Filename:   lp,
+		MaxSize:    o.MaxSize,
+		MaxAge:     o.MaxAge,
+		MaxBackups: o.MaxBackups,
+		Compress:   o.Compress,
+	})
 }
 
 func New(o *Option, logger *zap.SugaredLogger) (Logger, error) {
