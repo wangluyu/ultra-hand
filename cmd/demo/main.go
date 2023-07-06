@@ -3,12 +3,12 @@ package demo
 import (
 	"flag"
 	"fmt"
-	"github.com/go-kit/kit/log"
+	"github.com/google/wire"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"net"
 	"net/http"
-	"os"
+	"ultra-hand/pkg/log"
 	"ultra-hand/app/demo"
 )
 
@@ -17,13 +17,20 @@ var (
 	rpcDemoAddr = flag.String("rpcDemo-addr", "127.0.0.1:9008", "rpc demo address")
 )
 
-func Start() func() error {
+type Demo struct {
+	logger log.Logger
+}
+
+func New(logger log.Logger) Demo {
+	return Demo{logger: logger}
+}
+
+func (d Demo) Start() func() error {
 	return func() error {
 		flag.Parse()
 
-		logger := log.NewLogfmtLogger(os.Stderr)
 		svc := demo.NewService()
-		svc = demo.NewLogMiddleware(logger, svc)
+		svc = demo.NewLogMiddleware(d.logger, svc)
 
 		rpcConn, err := grpc.Dial(*rpcDemoAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 		if err != nil {
@@ -48,7 +55,9 @@ func Start() func() error {
 				return
 			}
 		}(httpListener)
-		httpHandler := demo.NewHTTPServer(svc, logger, rpcConn)
+		httpHandler := demo.NewHTTPServer(svc, d.logger, rpcConn)
 		return http.Serve(httpListener, httpHandler)
 	}
 }
+
+var DemoProvideSet = wire.NewSet(New)

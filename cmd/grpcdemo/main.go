@@ -3,8 +3,12 @@ package grpcdemo
 import (
 	"flag"
 	"fmt"
+	"github.com/google/wire"
 	"google.golang.org/grpc"
 	"net"
+	"ultra-hand/pkg/log"
+	"ultra-hand/service/grpcdemo"
+	"ultra-hand/service/grpcdemo/pb"
 	"ultra-hand/app/grpcdemo"
 	"ultra-hand/app/grpcdemo/pb"
 )
@@ -13,8 +17,17 @@ var (
 	grpcAddr = flag.String("grpc-addr", ":9008", "gRPC listen address")
 )
 
-func Start() func() error {
+type GrpcDemo struct {
+	logger log.Logger
+}
+
+func New(logger log.Logger) GrpcDemo {
+	return GrpcDemo{logger: logger}
+}
+
+func (gd GrpcDemo) Start() func() error {
 	svc := grpcdemo.NewService()
+	gd.logger.Info("GrpcDemo")
 	return func() error {
 		grpcListener, err := net.Listen("tcp", *grpcAddr)
 		if err != nil {
@@ -31,3 +44,5 @@ func Start() func() error {
 		return nil
 	}
 }
+
+var GrpcProvideSet = wire.NewSet(New)

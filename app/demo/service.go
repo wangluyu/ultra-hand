@@ -3,8 +3,8 @@ package demo
 import (
 	"context"
 	"github.com/go-kit/kit/endpoint"
-	"github.com/go-kit/kit/log"
 	"time"
+	"ultra-hand/pkg/log"
 )
 
 type Service interface {
@@ -35,15 +35,12 @@ type logMiddleware struct {
 
 func (mw logMiddleware) Call(ctx context.Context, req CallRequest, rpcReplyEndpoint endpoint.Endpoint) (reply string, err error) {
 	defer func(begin time.Time) {
-		err := mw.logger.Log(
+		mw.logger.Info("msg",
 			"name", req.Name,
 			"output", reply,
 			"err", err,
 			"took", time.Since(begin),
 		)
-		if err != nil {
-			return
-		}
 	}(time.Now())
 	reply, err = mw.next.Call(ctx, req, rpcReplyEndpoint)
 	return
