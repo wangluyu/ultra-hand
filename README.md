@@ -7,6 +7,7 @@
 单个服务可以独立部署，服务间随意调用。
 
 ## 目录结构
+
 ```tree
 .
 ├── cmd                       # 入口指令，用于启动微服务，每个微服务（app）一个文件夹
@@ -33,8 +34,11 @@
 ├── go.sum
 └── README.md
 ```
+
 ### 各层概念介绍
+
 一个 Server 包含多个 Application，每个 Application 都可以单独启动。
+
 1. cmd
    cmd 层负责引导程序启动，显著的工作是初始化逻辑、启动server监听、阻塞运行程序直至server退出。
 2. app
@@ -49,12 +53,13 @@
 > 参考链接
 >
 >> [1] https://goframe.org/pages/viewpage.action?pageId=30740166
-> 
+>
 >> [2] https://go-zero.dev/docs/concepts/layout
 
 ## 准备工作
 
 ## 最佳实践
+
 - go mod tidy
 - 脚手架 自动生成 service
 - 业务逻辑开始写起。
@@ -65,6 +70,7 @@
   ```
 
 ## TODO
+
 1. 日志组件
 2. 配置解析
 3. 注入依赖
@@ -79,6 +85,7 @@
 12. 定时任务
 
 ## 库
+
 1. [gRPC-Go](https://github.com/grpc/grpc-go) golang RPC库
 2. [go-kit](https://github.com/go-kit/kit) 构建微服务工具
 3. [mux](https://github.com/gorilla/mux) URL 路由和调度器
@@ -86,7 +93,8 @@
 5. [wire](https://github.com/google/wire) 注入依赖
 6. [viper](https://github.com/spf13/viper) 解析配置文件
 7. [zap](https://github.com/uber-go/zap) 日志
-8. [sentinel-golang](https://github.com/alibaba/sentinel-golang) 流控 [中文文档](https://sentinelguard.io/zh-cn/docs/golang/basic-api-usage.html)
+8. [sentinel-golang](https://github.com/alibaba/sentinel-golang)
+   流控 [中文文档](https://sentinelguard.io/zh-cn/docs/golang/basic-api-usage.html)
 9. [fasthttp](https://github.com/valyala/fasthttp) http库
 10. [chaosmonkey](https://github.com/Netflix/chaosmonkey) 环境故障模拟工具
 11. [useragent](https://github.com/mssola/useragent) 解析 User Agent
