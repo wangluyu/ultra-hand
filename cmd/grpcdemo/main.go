@@ -6,11 +6,9 @@ import (
 	"github.com/google/wire"
 	"google.golang.org/grpc"
 	"net"
-	"ultra-hand/pkg/log"
-	"ultra-hand/service/grpcdemo"
-	"ultra-hand/service/grpcdemo/pb"
 	"ultra-hand/app/grpcdemo"
 	"ultra-hand/app/grpcdemo/pb"
+	"ultra-hand/pkg/log"
 )
 
 var (
