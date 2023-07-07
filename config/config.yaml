@@ -5,7 +5,7 @@ log:
   levelEnabler: debug
   stdout: true
   json: false
-  maxSize: 10
+  maxSize: 1000
   maxBackups: 3
-  maxAge: 1
-  compress: true
+  maxAge: 3
+  compress: false

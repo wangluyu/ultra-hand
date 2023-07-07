@@ -3,6 +3,7 @@ package demo
 import (
 	"context"
 	"github.com/go-kit/kit/endpoint"
+	"math/rand"
 	"time"
 	"ultra-hand/pkg/log"
 )
@@ -35,6 +36,7 @@ type logMiddleware struct {
 
 func (mw logMiddleware) Call(ctx context.Context, req CallRequest, rpcReplyEndpoint endpoint.Endpoint) (reply string, err error) {
 	defer func(begin time.Time) {
+		//mw.logger.Info("Test", "randStr", randStr(99999))
 		mw.logger.Error("Error")
 		mw.logger.Debug("Debug")
 		mw.logger.Warn("Warn")
@@ -54,4 +56,14 @@ func NewLogMiddleware(logger log.Logger, svc Service) Service {
 		logger: logger,
 		next:   svc,
 	}
+}
+
+var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func randStr(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
 }
