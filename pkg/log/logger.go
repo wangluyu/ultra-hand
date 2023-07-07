@@ -84,13 +84,13 @@ func getLevelEnabler(level string) (zap.LevelEnablerFunc, error) {
 		return nil, err
 	}
 	switch level {
-	case "debug":
+	case "info", "warn":
 		levelEnabler = zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
-			return lvl >= zapcore.DebugLevel
+			return lvl <= parseLevel && lvl != zapcore.DebugLevel
 		})
 	default:
 		levelEnabler = zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
-			return lvl <= parseLevel && lvl != zapcore.DebugLevel
+			return lvl >= parseLevel
 		})
 	}
 	return levelEnabler, nil
