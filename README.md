@@ -68,10 +68,14 @@
   cd 项目根目录
   protoc --go_out=. --go-grpc_out=. manifest/protobuf/${文件名}.proto 
   ```
+# 帮助
+- go get 慢
+  - Mac/linux: ```export GOPROXY=https://goproxy.cn```
+  - Windows: ```SET GOPROXY="https://goproxy.cn"```
 
 ## TODO
 
-1. 日志组件
+1. ~~日志组件~~
 2. 配置解析
 3. 注入依赖
 4. 命令创建微服务：创建文件夹、文件

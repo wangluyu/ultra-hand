@@ -1,4 +1,4 @@
-package stringutil
+package ustring
 
 import "math/rand"
 
