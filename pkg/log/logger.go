@@ -2,11 +2,13 @@ package log
 
 import (
 	"github.com/google/wire"
+	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"os"
+	"time"
 )
 
 var (
@@ -25,10 +27,12 @@ type Option struct {
 	LevelEnabler string
 	Stdout       bool
 	Json         bool
-	MaxSize      int
+	MaxSizeMB    int
 	MaxBackups   int
-	MaxAge       int
+	MaxAgeDay    int
 	Compress     bool
+	TimeRotate   bool
+	RotationHour int
 }
 
 func NewLoggerOption(v *viper.Viper) (*Option, error) {
@@ -104,13 +108,25 @@ func getEncoder(isJson bool) zapcore.Encoder {
 }
 
 func getLogWriter(lp string, o *Option) zapcore.WriteSyncer {
-	return zapcore.AddSync(&lumberjack.Logger{
-		Filename:   lp,
-		MaxSize:    o.MaxSize,
-		MaxAge:     o.MaxAge,
-		MaxBackups: o.MaxBackups,
-		Compress:   o.Compress,
-	})
+	if o.TimeRotate {
+		trl, err := rotatelogs.New(
+			lp+".%Y%m%d%H",
+			rotatelogs.WithMaxAge(time.Duration(o.MaxAgeDay)*time.Hour*24),
+			rotatelogs.WithRotationTime(time.Duration(o.RotationHour)),
+		)
+		if err != nil {
+			return nil
+		}
+		return zapcore.AddSync(trl)
+	} else {
+		return zapcore.AddSync(&lumberjack.Logger{
+			Filename:   lp,
+			MaxSize:    o.MaxSizeMB,
+			MaxAge:     o.MaxAgeDay,
+			MaxBackups: o.MaxBackups,
+			Compress:   o.Compress,
+		})
+	}
 }
 
 func New(o *Option, logger *zap.SugaredLogger) (Logger, error) {
